@@ -3,7 +3,7 @@ requires = ["uv_build>=0.6.0,<0.7.0"]
 build-backend = "uv_build"
 
 [project]
-name = "arxivparser"
+name = "arxivparse"
 version = "0.1.0"
 description = "Convert arXiv papers to plain text using LaTeXML"
 readme = "README.md"
@@ -24,9 +24,9 @@ classifiers = [
 dependencies = ["jsonargparse>=4.48.0", "requests>=2.31"]
 
 [project.urls]
-Homepage = "https://github.com/flrjrf/arxivparser"
-Repository = "https://github.com/flrjrf/arxivparser"
-Issues = "https://github.com/flrjrf/arxivparser/issues"
+Homepage = "https://github.com/flrjrf/arxivparse"
+Repository = "https://github.com/flrjrf/arxivparse"
+Issues = "https://github.com/flrjrf/arxivparse/issues"
 
 [dependency-groups]
 dev = ["pytest>=8.0"]
