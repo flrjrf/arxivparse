@@ -1,23 +1,23 @@
-"""Tests for arxivparser.pipeline — full pipeline orchestration."""
+"""Tests for arxivparse.pipeline — full pipeline orchestration."""
 
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from arxivparser.errors import (
+from arxivparse.errors import (
     ConversionError,
     DownloadError,
     MainTexNotFoundError,
     NoLatexSourceError,
 )
-from arxivparser.pipeline import convert_arxiv_to_text
+from arxivparse.pipeline import convert_arxiv_to_text
 
 
-@patch("arxivparser.pipeline.xml_to_text", return_value="Hello world")
-@patch("arxivparser.pipeline.tex_to_xml")
-@patch("arxivparser.pipeline.find_main_tex")
-@patch("arxivparser.pipeline.download_arxiv_source")
+@patch("arxivparse.pipeline.xml_to_text", return_value="Hello world")
+@patch("arxivparse.pipeline.tex_to_xml")
+@patch("arxivparse.pipeline.find_main_tex")
+@patch("arxivparse.pipeline.download_arxiv_source")
 class TestPipeline:
     def test_success_end_to_end(self, mock_dl, mock_find, mock_conv, mock_extract, tmp_path):
         tex_path = tmp_path / "source" / "main.tex"

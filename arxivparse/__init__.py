@@ -1,4 +1,4 @@
-"""arxivparser - Convert arXiv papers to plain text using LaTeXML."""
+"""arxivparse - Convert arXiv papers to plain text using LaTeXML."""
 
 __version__ = "0.1.0"
 

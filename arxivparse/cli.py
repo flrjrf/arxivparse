@@ -1,4 +1,4 @@
-"""CLI entry point for arxivparser."""
+"""CLI entry point for arxivparse."""
 
 import logging
 import sys
@@ -6,8 +6,8 @@ from pathlib import Path
 
 from jsonargparse import ArgumentParser
 
-from arxivparser.errors import Arxiv2TextError
-from arxivparser.pipeline import convert_arxiv_to_text
+from arxivparse.errors import Arxiv2TextError
+from arxivparse.pipeline import convert_arxiv_to_text
 
 
 def _setup_logging(verbose: int, quiet: bool) -> None:
@@ -28,7 +28,7 @@ def _setup_logging(verbose: int, quiet: bool) -> None:
 
 def main(args: list[str] | None = None) -> None:
     parser = ArgumentParser(
-        prog="arxivparser",
+        prog="arxivparse",
         description="Convert arXiv papers to plain text using LaTeXML.",
     )
     parser.add_argument("arxiv_ids", nargs="+", help="arXiv ID(s) to convert")

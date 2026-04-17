@@ -32,7 +32,7 @@ Issues = "https://github.com/flrjrf/arxivparse/issues"
 dev = ["pytest>=8.0"]
 
 [project.scripts]
-arxivparser = "arxivparser.cli:main"
+arxivparse = "arxivparse.cli:main"
 
 [tool.uv.build-backend]
 module-root = ""

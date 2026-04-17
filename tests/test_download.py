@@ -1,4 +1,4 @@
-"""Tests for arxivparser.download — arXiv source download."""
+"""Tests for arxivparse.download — arXiv source download."""
 
 import gzip
 import tarfile
@@ -7,8 +7,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from arxivparser.download import ARXIV_EPRINT_URL, USER_AGENT, download_arxiv_source, is_tarball
-from arxivparser.errors import DownloadError, NoLatexSourceError
+from arxivparse.download import ARXIV_EPRINT_URL, USER_AGENT, download_arxiv_source, is_tarball
+from arxivparse.errors import DownloadError, NoLatexSourceError
 
 
 # ---------------------------------------------------------------------------
@@ -64,7 +64,7 @@ def _make_tarball(files: dict[str, str]) -> bytes:
 # ---------------------------------------------------------------------------
 
 class TestDownloadArxivSource:
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_success_tarball(self, mock_get, tmp_path):
         content = _make_tarball({"main.tex": "\\documentclass{article}"})
         mock_get.return_value = _mock_response(content=content)
@@ -73,7 +73,7 @@ class TestDownloadArxivSource:
         assert result == tmp_path
         assert (tmp_path / "main.tex").exists()
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_success_single_tex_gz(self, mock_get, tmp_path):
         tex = "\\documentclass{article}"
         gz_data = gzip.compress(tex.encode("utf-8"))
@@ -84,7 +84,7 @@ class TestDownloadArxivSource:
         assert result == tmp_path
         assert (tmp_path / "main.tex").read_text() == tex
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_success_raw_tex_with_documentclass(self, mock_get, tmp_path):
         tex = "\\documentclass{article}\n\\begin{document}\nHello\n\\end{document}"
         mock_get.return_value = _mock_response(content_type="application/octet-stream", content=tex.encode())
@@ -93,7 +93,7 @@ class TestDownloadArxivSource:
         assert result == tmp_path
         assert (tmp_path / "main.tex").read_text() == tex
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_success_raw_tex_with_input(self, mock_get, tmp_path):
         tex = "\\input{preamble}\nSome content"
         mock_get.return_value = _mock_response(content_type="application/octet-stream", content=tex.encode())
@@ -102,14 +102,14 @@ class TestDownloadArxivSource:
         assert result == tmp_path
         assert (tmp_path / "main.tex").read_text() == tex
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_pdf_only_raises_no_latex_source_error(self, mock_get, tmp_path):
         mock_get.return_value = _mock_response(content_type="text/html")
 
         with pytest.raises(NoLatexSourceError, match="2301.07041"):
             download_arxiv_source("2301.07041", tmp_path)
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_network_error_raises_download_error(self, mock_get, tmp_path):
         import requests
         mock_get.side_effect = requests.ConnectionError("refused")
@@ -117,7 +117,7 @@ class TestDownloadArxivSource:
         with pytest.raises(DownloadError, match="Failed to download"):
             download_arxiv_source("2301.07041", tmp_path)
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_http_error_raises_download_error(self, mock_get, tmp_path):
         import requests
         resp = MagicMock()
@@ -127,14 +127,14 @@ class TestDownloadArxivSource:
         with pytest.raises(DownloadError, match="Failed to download"):
             download_arxiv_source("2301.07041", tmp_path)
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_unrecognized_format_raises_download_error(self, mock_get, tmp_path):
         mock_get.return_value = _mock_response(content_type="application/binary", content=b"\x00\x01\x02\x03")
 
         with pytest.raises(DownloadError, match="unexpected content type"):
             download_arxiv_source("2301.07041", tmp_path)
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_corrupt_tarball_falls_through_to_gzip(self, mock_get, tmp_path):
         """Data with gzip magic but not a valid tar falls through to single-file gzip."""
         tex = "\\documentclass{article}"
@@ -144,7 +144,7 @@ class TestDownloadArxivSource:
         result = download_arxiv_source("2301.07041", tmp_path)
         assert (tmp_path / "main.tex").read_text() == tex
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_url_format(self, mock_get, tmp_path):
         mock_get.return_value = _mock_response(content=b"\\documentclass{article}")
 
@@ -153,7 +153,7 @@ class TestDownloadArxivSource:
         url = mock_get.call_args[0][0]
         assert url == "https://arxiv.org/e-print/2301.07041"
 
-    @patch("arxivparser.download.requests.get")
+    @patch("arxivparse.download.requests.get")
     def test_user_agent_header(self, mock_get, tmp_path):
         mock_get.return_value = _mock_response(content=b"\\documentclass{article}")
 

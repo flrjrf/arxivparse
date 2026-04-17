@@ -1,8 +1,8 @@
-"""Custom exceptions for arxivparser."""
+"""Custom exceptions for arxivparse."""
 
 
 class Arxiv2TextError(Exception):
-    """Base exception for arxivparser."""
+    """Base exception for arxivparse."""
 
 
 class DownloadError(Arxiv2TextError):

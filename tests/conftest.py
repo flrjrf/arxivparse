@@ -1,4 +1,4 @@
-"""Shared fixtures for arxivparser tests."""
+"""Shared fixtures for arxivparse tests."""
 
 import xml.etree.ElementTree as ET
 

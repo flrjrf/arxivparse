@@ -1,9 +1,9 @@
-"""Tests for arxivparser.tex — main .tex file discovery."""
+"""Tests for arxivparse.tex — main .tex file discovery."""
 
 import pytest
 
-from arxivparser.errors import MainTexNotFoundError
-from arxivparser.tex import KNOWN_MAIN_NAMES, _has_documentclass, _parse_makefile, find_main_tex
+from arxivparse.errors import MainTexNotFoundError
+from arxivparse.tex import KNOWN_MAIN_NAMES, _has_documentclass, _parse_makefile, find_main_tex
 
 
 # ---------------------------------------------------------------------------

@@ -10,7 +10,7 @@ import requests
 from .errors import DownloadError, NoLatexSourceError
 
 ARXIV_EPRINT_URL = "https://arxiv.org/e-print/{arxiv_id}"
-USER_AGENT = "arxivparser/0.1 (mailto:arxivparser@example.com)"
+USER_AGENT = "arxivparse/0.1 (mailto:arxivparse@example.com)"
 
 
 def download_arxiv_source(

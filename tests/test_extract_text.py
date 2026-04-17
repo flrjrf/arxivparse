@@ -1,10 +1,10 @@
-"""Tests for arxivparser.extract_text — XML-to-plain-text extraction."""
+"""Tests for arxivparse.extract_text — XML-to-plain-text extraction."""
 
 import xml.etree.ElementTree as ET
 
 import pytest
 
-from arxivparser.extract_text import NS, Q, _clean, _element_text, _extract_sections, xml_to_text
+from arxivparse.extract_text import NS, Q, _clean, _element_text, _extract_sections, xml_to_text
 
 
 # ---------------------------------------------------------------------------

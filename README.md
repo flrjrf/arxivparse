@@ -1,4 +1,4 @@
-# arxivparser
+# arxivparse
 
 Convert arXiv papers to clean plain text using LaTeXML. Downloads LaTeX source from arXiv, converts to XML, and extracts body text (title, abstract, sections, math, captions) — no HTML intermediary, no bibliography, no footnotes.
 
@@ -22,18 +22,18 @@ latexml --VERSION
 
 ```bash
 # From PyPI
-pip install arxivparser
+pip install arxivparse
 
 # Or from source
-git clone <repo-url> arxivparser
-cd arxivparser
+git clone <repo-url> arxivparse
+cd arxivparse
 uv sync
 ```
 
 ## Quick Start
 
 ```python
-from arxivparser import arxiv_to_text
+from arxivparse import arxiv_to_text
 
 text = arxiv_to_text("1706.03762")
 print(text[:200])
@@ -43,22 +43,22 @@ print(text[:200])
 
 ```bash
 # Single paper
-arxivparser 1706.03762
+arxivparse 1706.03762
 
 # Multiple papers (sequential)
-arxivparser 1706.03762 2301.07041
+arxivparse 1706.03762 2301.07041
 
 # Custom output path
-arxivparser -o output.txt 1706.03762
+arxivparse -o output.txt 1706.03762
 
 # Custom output directory
-arxivparser -d ./papers 1706.03762 2301.07041
+arxivparse -d ./papers 1706.03762 2301.07041
 
 # Verbose output (download, convert, extract steps)
-arxivparser -v 1706.03762
+arxivparse -v 1706.03762
 
 # Keep temp files for debugging
-arxivparser --keep-temp 1706.03762
+arxivparse --keep-temp 1706.03762
 ```
 
 Each paper produces a `<arxiv_id>.txt` file.
@@ -68,7 +68,7 @@ Each paper produces a `<arxiv_id>.txt` file.
 ### Simple: get text as a string
 
 ```python
-from arxivparser import arxiv_to_text
+from arxivparse import arxiv_to_text
 
 text = arxiv_to_text("1706.03762")
 ```
@@ -76,8 +76,8 @@ text = arxiv_to_text("1706.03762")
 ### Full pipeline control
 
 ```python
-from arxivparser.pipeline import convert_arxiv_to_text
-from arxivparser.errors import Arxiv2TextError
+from arxivparse.pipeline import convert_arxiv_to_text
+from arxivparse.errors import Arxiv2TextError
 
 try:
     output_path = convert_arxiv_to_text("1706.03762")
@@ -106,7 +106,7 @@ main(["-o", "output.txt", "1706.03762"])
 ## Error Handling
 
 ```python
-from arxivparser.errors import (
+from arxivparse.errors import (
     DownloadError,         # network/HTTP failure
     NoLatexSourceError,    # paper is PDF-only
     ConversionError,       # latexml failed

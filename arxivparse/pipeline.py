@@ -35,7 +35,7 @@ def convert_arxiv_to_text(
         Arxiv2TextError: On any pipeline failure.
     """
     if work_dir is None:
-        work_dir = Path(tempfile.mkdtemp(prefix="arxivparser_"))
+        work_dir = Path(tempfile.mkdtemp(prefix="arxivparse_"))
     else:
         work_dir.mkdir(parents=True, exist_ok=True)
 

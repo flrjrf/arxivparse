@@ -1,8 +1,8 @@
-"""Tests for arxivparser.errors exception hierarchy."""
+"""Tests for arxivparse.errors exception hierarchy."""
 
 import pytest
 
-from arxivparser.errors import (
+from arxivparse.errors import (
     Arxiv2TextError,
     ConversionError,
     DownloadError,
