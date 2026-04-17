@@ -19,6 +19,8 @@ def convert_arxiv_to_text(
     output_path: Path | None = None,
     work_dir: Path | None = None,
     keep_temp: bool = False,
+    download_timeout: int = 60,
+    convert_timeout: int = 120,
 ) -> Path:
     """Convert a single arXiv paper to plain text.
 
@@ -27,6 +29,8 @@ def convert_arxiv_to_text(
         output_path: Where to write the .txt file. Defaults to <arxiv_id>.txt.
         work_dir: Temp working directory. Defaults to system temp.
         keep_temp: If True, don't delete temp dir after completion.
+        download_timeout: Timeout in seconds for downloading the arXiv source.
+        convert_timeout: Timeout in seconds for the LaTeXML conversion.
 
     Returns:
         Path to the generated .txt file.
@@ -44,14 +48,14 @@ def convert_arxiv_to_text(
 
     try:
         logger.info("Downloading source for %s", arxiv_id)
-        download_arxiv_source(arxiv_id, source_dir)
+        download_arxiv_source(arxiv_id, source_dir, timeout=download_timeout)
 
         logger.info("Finding main .tex file for %s", arxiv_id)
         main_tex = find_main_tex(source_dir, arxiv_id)
         logger.info("Using %s", main_tex)
 
         logger.info("Converting %s to XML", main_tex.name)
-        xml_path = tex_to_xml(main_tex, build_dir)
+        xml_path = tex_to_xml(main_tex, build_dir, timeout=convert_timeout)
 
         logger.info("Extracting text from XML")
         text = xml_to_text(str(xml_path))

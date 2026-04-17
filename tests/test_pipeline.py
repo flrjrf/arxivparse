@@ -100,3 +100,15 @@ class TestPipeline:
         result = convert_arxiv_to_text("2301.07041", output_path=output)
         assert result == output
         assert output.exists()
+
+    def test_timeout_propagation(self, mock_dl, mock_find, mock_conv, mock_extract, tmp_path):
+        mock_find.return_value = tmp_path / "main.tex"
+        mock_conv.return_value = tmp_path / "output.xml"
+
+        convert_arxiv_to_text(
+            "2301.07041",
+            download_timeout=30,
+            convert_timeout=45,
+        )
+        assert mock_dl.call_args[1]["timeout"] == 30
+        assert mock_conv.call_args[1]["timeout"] == 45

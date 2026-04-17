@@ -35,6 +35,8 @@ def main(args: list[str] | None = None) -> None:
     parser.add_argument("-o", "--output", type=Path, default=None, help="Output file (single paper)")
     parser.add_argument("-d", "--output_dir", type=Path, default=Path("."), help="Output directory")
     parser.add_argument("-k", "--keep_temp", action="store_true", help="Keep temp files")
+    parser.add_argument("--download-timeout", type=int, default=60, help="Timeout in seconds for downloading arXiv source (default: 60)")
+    parser.add_argument("--convert-timeout", type=int, default=120, help="Timeout in seconds for LaTeXML conversion (default: 120)")
     parser.add_argument("-v", "--verbose", action="count", default=0)
     parser.add_argument("-q", "--quiet", action="store_true")
 
@@ -48,6 +50,8 @@ def main(args: list[str] | None = None) -> None:
                 opts.arxiv_ids[0],
                 output_path=opts.output,
                 keep_temp=opts.keep_temp,
+                download_timeout=opts.download_timeout,
+                convert_timeout=opts.convert_timeout,
             )
             print(result)
         except Arxiv2TextError as e:
@@ -62,6 +66,8 @@ def main(args: list[str] | None = None) -> None:
                     arxiv_id,
                     output_path=out,
                     keep_temp=opts.keep_temp,
+                    download_timeout=opts.download_timeout,
+                    convert_timeout=opts.convert_timeout,
                 )
                 print(result)
             except Arxiv2TextError as e:

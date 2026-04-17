@@ -111,6 +111,19 @@ class TestTexToXml:
 
     @patch("arxivparse.convert.subprocess.run")
     @patch("arxivparse.convert._find_latexml")
+    def test_custom_timeout(self, mock_find, mock_run, tmp_path):
+        mock_find.return_value = "/usr/bin/latexml"
+        mock_run.return_value = subprocess.CompletedProcess(
+            args=[], returncode=0, stdout="", stderr=""
+        )
+        tex_path = tmp_path / "main.tex"
+        tex_path.write_text("\\documentclass{article}")
+
+        tex_to_xml(tex_path, tmp_path / "build", timeout=300)
+        assert mock_run.call_args[1]["timeout"] == 300
+
+    @patch("arxivparse.convert.subprocess.run")
+    @patch("arxivparse.convert._find_latexml")
     def test_file_not_found_raises(self, mock_find, mock_run, tmp_path):
         mock_find.return_value = "/usr/bin/latexml"
         mock_run.side_effect = FileNotFoundError("not found")

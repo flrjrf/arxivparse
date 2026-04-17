@@ -26,7 +26,7 @@ class TestPublicAPIExports:
 class TestArxivToText:
     @patch("arxivparse.convert_arxiv_to_text")
     def test_returns_string(self, mock_convert, tmp_path):
-        def _mock(arxiv_id, output_path):
+        def _mock(arxiv_id, output_path, **kwargs):
             output_path.write_text("paper text")
             return output_path
 
@@ -60,3 +60,11 @@ class TestArxivToText:
         mock_convert.side_effect = DownloadError("network fail")
         with pytest.raises(Arxiv2TextError):
             arxiv_to_text("2301.07041")
+
+    @patch("arxivparse.convert_arxiv_to_text")
+    def test_propagates_timeouts(self, mock_convert):
+        from arxivparse import arxiv_to_text
+
+        arxiv_to_text("2301.07041", download_timeout=30, convert_timeout=45)
+        assert mock_convert.call_args[1]["download_timeout"] == 30
+        assert mock_convert.call_args[1]["convert_timeout"] == 45

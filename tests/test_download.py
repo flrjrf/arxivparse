@@ -160,3 +160,10 @@ class TestDownloadArxivSource:
         download_arxiv_source("2301.07041", tmp_path)
         headers = mock_get.call_args[1]["headers"]
         assert headers["User-Agent"] == USER_AGENT
+
+    @patch("arxivparse.download.requests.get")
+    def test_custom_timeout(self, mock_get, tmp_path):
+        mock_get.return_value = _mock_response(content=b"\\documentclass{article}")
+
+        download_arxiv_source("2301.07041", tmp_path, timeout=30)
+        assert mock_get.call_args[1]["timeout"] == 30
