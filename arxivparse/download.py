@@ -1,6 +1,7 @@
 """Download and extract arXiv LaTeX source."""
 
 import gzip
+import sys
 import tarfile
 from io import BytesIO
 from pathlib import Path
@@ -50,7 +51,11 @@ def download_arxiv_source(
     if is_tarball(data):
         try:
             with tarfile.open(fileobj=BytesIO(data), mode="r:gz") as tar:
-                tar.extractall(dest_dir, filter="data")
+                # filter="data" requires Python 3.12+ (PEP 706)
+                if sys.version_info >= (3, 12):
+                    tar.extractall(dest_dir, filter="data")
+                else:
+                    tar.extractall(dest_dir)
             return dest_dir
         except (tarfile.TarError, EOFError):
             pass  # Fall through to gzip single-file handling
