@@ -74,7 +74,7 @@ class TestDownloadArxivSource:
         assert (tmp_path / "main.tex").exists()
 
     @patch("arxivparser.download.requests.get")
-    def test_success_single_tex_gz(self, tmp_path):
+    def test_success_single_tex_gz(self, mock_get, tmp_path):
         tex = "\\documentclass{article}"
         gz_data = gzip.compress(tex.encode("utf-8"))
         # Not a valid tarball but starts with gzip magic bytes
@@ -85,7 +85,7 @@ class TestDownloadArxivSource:
         assert (tmp_path / "main.tex").read_text() == tex
 
     @patch("arxivparser.download.requests.get")
-    def test_success_raw_tex_with_documentclass(self, tmp_path):
+    def test_success_raw_tex_with_documentclass(self, mock_get, tmp_path):
         tex = "\\documentclass{article}\n\\begin{document}\nHello\n\\end{document}"
         mock_get.return_value = _mock_response(content_type="application/octet-stream", content=tex.encode())
 
@@ -94,7 +94,7 @@ class TestDownloadArxivSource:
         assert (tmp_path / "main.tex").read_text() == tex
 
     @patch("arxivparser.download.requests.get")
-    def test_success_raw_tex_with_input(self, tmp_path):
+    def test_success_raw_tex_with_input(self, mock_get, tmp_path):
         tex = "\\input{preamble}\nSome content"
         mock_get.return_value = _mock_response(content_type="application/octet-stream", content=tex.encode())
 
@@ -135,7 +135,7 @@ class TestDownloadArxivSource:
             download_arxiv_source("2301.07041", tmp_path)
 
     @patch("arxivparser.download.requests.get")
-    def test_corrupt_tarball_falls_through_to_gzip(self, tmp_path):
+    def test_corrupt_tarball_falls_through_to_gzip(self, mock_get, tmp_path):
         """Data with gzip magic but not a valid tar falls through to single-file gzip."""
         tex = "\\documentclass{article}"
         gz_data = gzip.compress(tex.encode("utf-8"))

@@ -24,18 +24,20 @@ class TestPublicAPIExports:
 
 
 class TestArxivToText:
-    @patch("arxivparser.pipeline.convert_arxiv_to_text")
+    @patch("arxivparser.convert_arxiv_to_text")
     def test_returns_string(self, mock_convert, tmp_path):
-        output = tmp_path / "out.txt"
-        output.write_text("paper text")
-        mock_convert.return_value = output
+        def _mock(arxiv_id, output_path):
+            output_path.write_text("paper text")
+            return output_path
+
+        mock_convert.side_effect = _mock
 
         from arxivparser import arxiv_to_text
         result = arxiv_to_text("2301.07041")
         assert isinstance(result, str)
         assert result == "paper text"
 
-    @patch("arxivparser.pipeline.convert_arxiv_to_text")
+    @patch("arxivparser.convert_arxiv_to_text")
     def test_cleans_temp_file(self, mock_convert, tmp_path):
         output = tmp_path / "out.txt"
         output.write_text("text")
@@ -50,7 +52,7 @@ class TestArxivToText:
         # The output file still exists (written by mock), no extra files
         assert set(tmp_path.iterdir()) == before
 
-    @patch("arxivparser.pipeline.convert_arxiv_to_text")
+    @patch("arxivparser.convert_arxiv_to_text")
     def test_propagates_error(self, mock_convert):
         from arxivparser import arxiv_to_text
         from arxivparser.errors import DownloadError

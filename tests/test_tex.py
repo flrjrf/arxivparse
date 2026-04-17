@@ -42,7 +42,8 @@ class TestParseMakefile:
         assert _parse_makefile(mf) is None
 
     def test_unreadable(self):
-        assert _parse_makefile("/nonexistent/path/Makefile") is None
+        from pathlib import Path
+        assert _parse_makefile(Path("/nonexistent/path/Makefile")) is None
 
     def test_multiple_targets_returns_first(self, tmp_path):
         mf = tmp_path / "Makefile"
