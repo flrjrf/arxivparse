@@ -1,10 +1,13 @@
 """Run the LaTeXML conversion (tex → XML)."""
 
+import logging
 import shutil
 import subprocess
 from pathlib import Path
 
 from .errors import ConversionError
+
+logger = logging.getLogger(__name__)
 
 
 def _find_latexml() -> str:
@@ -40,7 +43,7 @@ def tex_to_xml(
         str(tex_path),
         f"--path={source_dir}",
         f"--destination={xml_path}",
-        "--quiet",
+        "--log=/dev/null",
     ]
 
     try:
@@ -50,16 +53,20 @@ def tex_to_xml(
             text=True,
             timeout=timeout,
         )
+
+        if result.stderr:
+            for line in result.stderr.strip().splitlines():
+                logger.debug("latexml: %s", line)
+
+        if result.returncode != 0:
+            stderr = result.stderr.strip()
+            msg = f"latexml failed (exit code {result.returncode})"
+            if stderr:
+                msg += f": {stderr}"
+            raise ConversionError(msg)
     except FileNotFoundError:
         raise ConversionError(f"latexml not found at {latexml_path}")
     except subprocess.TimeoutExpired:
         raise ConversionError(f"latexml timed out after {timeout}s")
-
-    if result.returncode != 0:
-        stderr = result.stderr.strip()
-        msg = f"latexml failed (exit code {result.returncode})"
-        if stderr:
-            msg += f": {stderr}"
-        raise ConversionError(msg)
 
     return xml_path
