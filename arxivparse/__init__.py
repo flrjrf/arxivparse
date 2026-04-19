@@ -1,6 +1,6 @@
 """arxivparse - Convert arXiv papers to plain text using LaTeXML."""
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .errors import Arxiv2TextError
 from .pipeline import convert_arxiv_to_text

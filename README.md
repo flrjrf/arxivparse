@@ -1,67 +1,59 @@
 # arxivparse
 
-Convert arXiv papers to clean plain text using LaTeXML. Downloads LaTeX source from arXiv, converts to XML, and extracts body text (title, abstract, sections, math, captions) — no HTML intermediary, no bibliography, no footnotes.
-
-## Prerequisites
-
-- Python >= 3.13
-- [uv](https://docs.astral.sh/uv/) (or pip)
-- [LaTeXML](https://dlmf.nist.gov/LaTeXML/) (v0.8.x) — install via Homebrew:
-
-```bash
-brew install latexml
-```
-
-Verify it's on your PATH:
-
-```bash
-latexml --VERSION
-```
+Convert arXiv papers to clean plain text using LaTeXML. Download any arXiv paper and get structured text with title, abstract, sections, and math notation preserved.
 
 ## Install
 
 ```bash
-# From PyPI
 pip install arxivparse
-
-# Or from source
-git clone <repo-url> arxivparse
-cd arxivparse
-uv sync
 ```
 
-## Quick Start
+Quick verification that LaTeXML is installed:
+
+```bash
+latexml --version
+```
+
+## Usage
+
+### Get text as a string
 
 ```python
 from arxivparse import arxiv_to_text
 
-text = arxiv_to_text("1706.03762")
+text = arxiv_to_text("1706.03762")  # Attention is All You Need paper
 print(text[:200])
 ```
 
-## CLI Usage
+### Save text to a file
 
-```bash
-# Single paper
-arxivparse 1706.03762
+```python
+from arxivparse.pipeline import convert_arxiv_to_text
+from pathlib import Path
 
-# Multiple papers (sequential)
-arxivparse 1706.03762 2301.07041
-
-# Custom output path
-arxivparse -o output.txt 1706.03762
-
-# Custom output directory
-arxivparse -d ./papers 1706.03762 2301.07041
-
-# Verbose output (download, convert, extract steps)
-arxivparse -v 1706.03762
-
-# Keep temp files for debugging
-arxivparse --keep-temp 1706.03762
+output_path = convert_arxiv_to_text("1706.03762", output_path="paper.txt")
+text = Path("paper.txt").read_text()
 ```
 
-Each paper produces a `<arxiv_id>.txt` file.
+### Handle errors gracefully
+
+```python
+from arxivparse.errors import (
+    Arxiv2TextError,
+    DownloadError,
+    NoLatexSourceError,
+    ConversionError,
+)
+
+try:
+    text = arxiv_to_text("1706.03762")
+except NoLatexSourceError:
+    print("Paper is PDF-only")
+except DownloadError:
+    print("Download failed")
+except ConversionError:
+    print("LaTeXML conversion failed")
+```
 
 ## Library Usage
 
@@ -86,22 +78,28 @@ except Arxiv2TextError as e:
     print(f"Failed: {e}")
 ```
 
-### Call the CLI from code
+
+## Configuration
+
+Both functions accept optional timeouts:
 
 ```python
-from main import main
+# arxiv_to_text() - returns string
+text = arxiv_to_text(
+    arxiv_id="1706.03762",
+    download_timeout=60,    # seconds to wait for download
+    convert_timeout=120,   # seconds to wait for LaTeXML
+)
 
-main(["1706.03762", "2301.07041"])
-main(["-o", "output.txt", "1706.03762"])
+# convert_arxiv_to_text() - returns file path
+path = convert_arxiv_to_text(
+    arxiv_id="1706.03762",
+    output_path="paper.txt",  # custom output file
+    download_timeout=60,
+    convert_timeout=120,
+    keep_temp=False,         # keep intermediate files
+)
 ```
-
-## Arguments
-
-| Param | Type | Default | Description |
-|---|---|---|---|
-| `arxiv_id` | `str` | — | arXiv ID (e.g. `"1706.03762"`) |
-| `output_path` | `Path` | `<arxiv_id>.txt` | Where to write the output |
-| `keep_temp` | `bool` | `False` | Keep temp files after conversion |
 
 ## Error Handling
 
@@ -109,22 +107,31 @@ main(["-o", "output.txt", "1706.03762"])
 from arxivparse.errors import (
     DownloadError,         # network/HTTP failure
     NoLatexSourceError,    # paper is PDF-only
-    ConversionError,       # latexml failed
-    MainTexNotFoundError,  # no .tex file found in bundle
+    ConversionError,       # LaTeXML failed
+    MainTexNotFoundError,  # no .tex file found
+    Arxiv2TextError,       # any pipeline failure
 )
 ```
 
-## Build / Publish
+## CLI Reference (Optional)
+
+If you prefer the command line:
 
 ```bash
-# Build a wheel
-uv build
+# Install the CLI (comes with the package)
+arxivparse 1706.03762
 
-# Publish to PyPI
-uv publish
+# Multiple papers
+arxivparse 1706.03762 2301.07041
 
-# Or with twine
-twine upload dist/*
+# Custom output
+arxivparse -o paper.txt 1706.03762
+
+# Verbose output
+arxivparse -v 1706.03762
+
+# Keep temp files for debugging
+arxivparse --keep-temp 1706.03762
 ```
 
 ## Output Format
