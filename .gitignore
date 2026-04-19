@@ -245,5 +245,5 @@ tags
 # Ignore all local history of files
 .history
 .ionide
-
+.CLAUDE.md
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,vim,macos
